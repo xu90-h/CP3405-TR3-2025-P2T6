@@ -45,6 +45,11 @@ Build the project structure, complete the team charter, design the low-fidelity 
 | 9 | Draw product flowchart | Visualize how Smart Seat helps users. |
 | 10 | Achieve transparent work | Ensure transparency in work progress. |
 | 11 | Locate seat reservation | Design how the system identifies and displays seat positions. |
+| 12 | Convenient and clear reserve function | Implement a simple, intuitive seat reservation process. |
+| 13 | Two modes of Smart Seat | Support student and teacher versions with role-based features. |
+| 14 | Login page design | Create a login page following Figma design. |
+| 15 | Informing users after reservation | Notify users after they reserve a seat (confirmation). |
+
 
 ### Refined PBIs (Sprint 1 Focus)
 | # | PBI | Description |
