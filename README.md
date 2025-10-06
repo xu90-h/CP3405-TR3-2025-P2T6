@@ -51,10 +51,10 @@ Build the project structure, complete the team charter, design the low-fidelity 
 
 ---
 
-##  Installation & Running
+## Running
 
-### Frontend
+
 ```bash
-cd frontend
+cd README.md
 npm install
 npm run dev
