@@ -1,0 +1,39 @@
+name: Frontend CI
+
+# 当 push 或 PR 提交到 main 或 dev 分支时触发
+on:
+  push:
+    branches:
+      - main
+      - dev
+  pull_request:
+    branches:
+      - main
+      - dev
+
+jobs:
+  build:
+    runs-on: ubuntu-latest  # 使用最新 Ubuntu 系统
+
+    steps:
+      # 1. 检出代码
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # 2. 设置 Node.js 环境
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20  # 你可以改成你前端项目使用的版本
+
+      # 3. 安装依赖
+      - name: Install dependencies
+        run: npm install
+
+      # 4. 构建项目
+      - name: Build project
+        run: npm run build
+
+      # 5. 运行测试（如果有）
+      - name: Run tests
+        run: npm test
