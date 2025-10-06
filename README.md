@@ -1,18 +1,18 @@
 # CP3405
 # Smart Seat - Team P1T3
 
-## 📌 Project Overview
+##  Project Overview
 Smart Seat is a web application designed to help students and teachers manage seat reservations efficiently.  
 It provides an intuitive interface for booking, viewing, and managing seat availability, supporting both student and teacher roles.
 
 ---
 
-## 🎯 Sprint 1 Goal
+##  Sprint 1 Goal
 Build the project structure, complete the team charter, design the low-fidelity prototype in Figma, and implement basic frontend pages (Home, Login, Dashboard).
 
 ---
 
-## 🧑‍🤝‍🧑 Team Members & Roles
+##  Team Members & Roles
 | Role | Name |
 |------|------|
 | Product Owner (PO) |  |
@@ -25,11 +25,11 @@ Build the project structure, complete the team charter, design the low-fidelity 
 
 ---
 
-## 📁 Repository Structure
+##  Repository Structure
 
 ---
 
-## 📝 Product Backlog Items (PBIs)
+##  Product Backlog Items (PBIs)
 
 ### General PBIs (Planning & Team Setup)
 | # | PBI | Description |
@@ -56,7 +56,7 @@ Build the project structure, complete the team charter, design the low-fidelity 
 
 ---
 
-## 🚀 Installation & Running
+##  Installation & Running
 
 ### Frontend
 ```bash
