@@ -21,7 +21,6 @@ Build the project structure, complete the team charter, design the low-fidelity 
 | Developer | huang.xu |
 | Developer | haochen.yu |
 
-
 ---
 
 ##  Repository Structure
