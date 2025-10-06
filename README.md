@@ -12,15 +12,14 @@ Build the project structure, complete the team charter, design the low-fidelity 
 
 ---
 
-##  Team Members & Roles
+##  Team Members & Roles(weekly changes)
 | Role | Name |
 |------|------|
-| Product Owner (PO) |  |
-| Scrum Master (SM) |  |
-| UX/UI Designer |  |
-| Frontend Developer |  |
-| Backend Developer |  |
-| Data/ML Developer |  |
+| Product Owner (PO) | chongjie.mo |
+| Scrum Master (SM) | penghan |
+| UX/UI Designer | huang.xu  |
+| Developer | yijie.li |
+
 | QA/DevOps |  |
 
 ---
