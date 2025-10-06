@@ -17,10 +17,9 @@ Build the project structure, complete the team charter, design the low-fidelity 
 |------|------|
 | Product Owner (PO) | chongjie.mo |
 | Scrum Master (SM) | penghan |
-| UX/UI Designer | huang.xu  |
-| Developer | yijie.li |
+| UX/UI Designer | yijie.li  |
+| Developer | huang.xu | haochen.yu |
 
-| QA/DevOps |  |
 
 ---
 
