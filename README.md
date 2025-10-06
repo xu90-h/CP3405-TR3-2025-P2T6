@@ -15,13 +15,13 @@ Build the project structure, complete the team charter, design the low-fidelity 
 ## 🧑‍🤝‍🧑 Team Members & Roles
 | Role | Name |
 |------|------|
-| Product Owner (PO) | 李明 |
-| Scrum Master (SM) | 王婷 |
-| UX/UI Designer | 陈晓 |
-| Frontend Developer | Yuhao Chen |
-| Backend Developer | 赵强 |
-| Data/ML Developer | 林海 |
-| QA/DevOps | 周慧 |
+| Product Owner (PO) |  |
+| Scrum Master (SM) |  |
+| UX/UI Designer |  |
+| Frontend Developer |  |
+| Backend Developer |  |
+| Data/ML Developer |  |
+| QA/DevOps |  |
 
 ---
 
