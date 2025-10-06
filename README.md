@@ -31,7 +31,7 @@ Build the project structure, complete the team charter, design the low-fidelity 
 
 ##  Product Backlog Items (PBIs)
 
-### General PBIs (Planning & Team Setup)
+### General PBIs (Planning & Team Setup)&Refined PBIs (Sprint 1 Focus)
 | # | PBI | Description |
 |---|-----|-------------|
 | 1 | Setting sprint goals | Define the main objective for Sprint 1. |
@@ -50,14 +50,6 @@ Build the project structure, complete the team charter, design the low-fidelity 
 | 14 | Login page design | Create a login page following Figma design. |
 | 15 | Informing users after reservation | Notify users after they reserve a seat (confirmation). |
 
-
-### Refined PBIs (Sprint 1 Focus)
-| # | PBI | Description |
-|---|-----|-------------|
-| 12 | Convenient and clear reserve function | Implement a simple, intuitive seat reservation process. |
-| 13 | Two modes of Smart Seat | Support student and teacher versions with role-based features. |
-| 14 | Login page design | Create a login page following Figma design. |
-| 15 | Informing users after reservation | Notify users after they reserve a seat (confirmation). |
 
 ---
 
