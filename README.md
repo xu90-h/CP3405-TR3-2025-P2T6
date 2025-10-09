@@ -47,6 +47,14 @@ Build the project structure, complete the team charter, design the low-fidelity 
 | 9 | Pilot Run & Evaluation | Run SmartSeat in test environment and collect data. |
 | 10 | Final Integration & Presentation | Finalize prototype and deliver demo and report. |
 
+### General PBIs (Planning & Team Setup) & Refined PBIs
+| # | PBI | Description |
+|---|-----|-------------|
+| 1 | Project Kickoff & Orientation | Form team, understand goals, review Lean UX and AI/ML concepts. |
+| 2 | Problem Framing & User Research | Conduct interviews, identify pain points, create proto-personas and JTBD. |
+| 3 | Low-Fidelity Wireframes & Assumptions | Design low-fidelity wireframes and define key assumptions. |
+| 4 | Clickable Prototype & Usability Test | Build clickable prototype and run usability testing. |
+
 
 ---
 
