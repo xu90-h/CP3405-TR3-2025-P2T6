@@ -7,7 +7,7 @@ It provides an intuitive interface for booking, viewing, and managing seat avail
 
 ---
 
-##  Sprint 1 Goal
+##  Sprint Goal
 Build the project structure, complete the team charter, design the low-fidelity prototype in Figma, and implement basic frontend pages (Home, Login, Dashboard).
 
 ---
@@ -33,7 +33,7 @@ Build the project structure, complete the team charter, design the low-fidelity 
 
 ##  Product Backlog Items (PBIs)
 
-### General PBIs (Planning & Team Setup)&Refined PBIs
+### General PBIs (Planning & Team Setup) & Refined PBIs
 | # | PBI | Description |
 |---|-----|-------------|
 | 1 | Project Kickoff & Orientation | Form team, understand goals, review Lean UX and AI/ML concepts. |
