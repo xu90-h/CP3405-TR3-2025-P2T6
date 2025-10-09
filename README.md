@@ -33,7 +33,7 @@ Build the project structure, complete the team charter, design the low-fidelity 
 
 ##  Product Backlog Items (PBIs)
 
-### General PBIs (Planning & Team Setup)&Refined PBIs (Sprint 1 Focus)
+### General PBIs (Planning & Team Setup)&Refined PBIs
 | # | PBI | Description |
 |---|-----|-------------|
 | 1 | Project Kickoff & Orientation | Form team, understand goals, review Lean UX and AI/ML concepts. |
