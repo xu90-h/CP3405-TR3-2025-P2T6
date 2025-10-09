@@ -36,21 +36,16 @@ Build the project structure, complete the team charter, design the low-fidelity 
 ### General PBIs (Planning & Team Setup)&Refined PBIs (Sprint 1 Focus)
 | # | PBI | Description |
 |---|-----|-------------|
-| 1 | Setting sprint goals | Define the main objective for Sprint 1. |
-| 2 | Explore functions of Smart Seat | Research and brainstorm key features of Smart Seat. |
-| 3 | Consider possible users | Define user personas (teachers and students). |
-| 4 | Design basic frame | Create low-fidelity prototype in Figma. |
-| 5 | Team meeting to assign roles | Conduct meeting and assign Scrum roles. |
-| 6 | Calculate team velocity | Estimate team capacity and velocity. |
-| 7 | Discovery of team members' available time | Collect each member’s working hours. |
-| 8 | Discussion on work progress synchronization | Plan how to track and sync progress. |
-| 9 | Draw product flowchart | Visualize how Smart Seat helps users. |
-| 10 | Achieve transparent work | Ensure transparency in work progress. |
-| 11 | Locate seat reservation | Design how the system identifies and displays seat positions. |
-| 12 | Convenient and clear reserve function | Implement a simple, intuitive seat reservation process. |
-| 13 | Two modes of Smart Seat | Support student and teacher versions with role-based features. |
-| 14 | Login page design | Create a login page following Figma design. |
-| 15 | Informing users after reservation | Notify users after they reserve a seat (confirmation). |
+| 1 | Project Kickoff & Orientation | Form team, understand goals, review Lean UX and AI/ML concepts. |
+| 2 | Problem Framing & User Research | Conduct interviews, identify pain points, create proto-personas and JTBD. |
+| 3 | Low-Fidelity Wireframes & Assumptions | Design low-fidelity wireframes and define key assumptions. |
+| 4 | Clickable Prototype & Usability Test | Build clickable prototype and run usability testing. |
+| 5 | Data Strategy & ML Baseline | Plan data collection and build baseline CV or Forecasting models. |
+| 6 | Integration of Live Data Streams | Integrate simulated or real-time data for live seat updates. |
+| 7 | Reinforcement Learning Simulation | Simulate RL-based seat allocation to test fairness. |
+| 8 | Usability & Accessibility Audit | Conduct usability and accessibility testing, then refine. |
+| 9 | Pilot Run & Evaluation | Run SmartSeat in test environment and collect data. |
+| 10 | Final Integration & Presentation | Finalize prototype and deliver demo and report. |
 
 
 ---
