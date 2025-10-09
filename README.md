@@ -1,5 +1,5 @@
 # CP3405
-# Smart Seat - Team P2T6
+# Smart Seat - Team P2T6 
 
 ##  Project Overview
 Smart Seat is a web application designed to help students and teachers manage seat reservations efficiently.  
