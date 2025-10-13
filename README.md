@@ -20,7 +20,7 @@ Build the project structure, complete the team charter, design the low-fidelity 
 | UX/UI Designer | yijie.li  |
 | Developer(BE) | huang.xu |
 | Developer(FE) | haochen.yu |
-| Developer(Data/ML) | Hwang Sungha |
+| Developer(AI/ML) | Hwang Sungha |
 
 
 
