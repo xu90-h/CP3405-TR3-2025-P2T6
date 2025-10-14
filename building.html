@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartSeat - Select Building</title>
+    <link rel="stylesheet" href="c:\CP3405\style.css">
+</head>
+<body>
+    <div id="building-page" class="container">
+        <!-- 回退箭头按钮 -->
+        <button id="back-to-login" class="back-arrow">
+            &lt;
+        </button>
+        <h1 class="page-title">Select Building</h1>
+        <!-- 建筑地图 -->
+        <div class="map-container">
+           <img src="images/building-map.png" alt="Building Map" class="building-map">
+        </div>
+        <!-- 建筑选项列表 -->
+        <div class="building-options">
+            <div class="building-item">
+                <input type="checkbox" class="building-checkbox">
+                <label>Building A</label>
+                <span class="arrow-right">></span>
+            </div>
+            <div class="building-item">
+                <input type="checkbox" class="building-checkbox">
+                <label>Building B</label>
+                <span class="arrow-right">></span>
+            </div>
+            <div class="building-item">
+                <input type="checkbox" class="building-checkbox">
+                <label>Building C</label>
+                <span class="arrow-right">></span>
+            </div>
+        </div>
+    </div>
+
+    <script src="building.js"></script>
+</body>
+</html>

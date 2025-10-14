@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartSeat - Room 101</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="room-page" class="container">
+        <button id="back-to-building" class="back-btn">&lt; Back</button>
+        <div class="title-timer-container">
+            <h1 class="page-title">Room 101</h1>
+            <div class="timer" id="timer"></div>
+        </div>
+        <div class="seat-grid" id="seat-grid"></div>
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-color available"></div>
+                <span>Available</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color selected"></div>
+                <span>Your Selection</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color occupied"></div>
+                <span>Occupied</span>
+            </div>
+        </div>
+        <button id="reserve-btn">Reserve Seat</button>
+    </div>
+
+    <div class="modal" id="reserve-modal">
+        <div class="modal-content">
+            <div class="modal-title">Confirm Reservation</div>
+            <div class="modal-message" id="reserve-message"></div>
+            <button class="modal-button" id="confirm-reserve">Confirm</button>
+            <button class="modal-button" id="cancel-reserve">Cancel</button>
+        </div>
+    </div>
+
+    <script src="room.js"></script>
+</body>
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartSeat - Contact</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="contact-page" class="container">
+        <div class="logo-section">
+            <div class="logo">S</div>
+            <h1>SmartSeat</h1>
+        </div>
+        <div class="contact-info">
+            <div class="contact-item">
+                <img src="images/phone.png" alt="Phone" class="contact-icon">
+                <span>80XX-XXXX</span>
+            </div>
+            <div class="contact-item">
+                <img src="images/email.png" alt="Email" class="contact-icon">
+                <span>XXXXX@XX.COM</span>
+            </div>
+            <div class="contact-item">
+                <span class="smiley" id="smiley">😊</span>
+                <span>Please take a survey for us!</span>
+            </div>
+        </div>
+        <button id="back-to-login-from-contact" style="width: auto; float: left;">&lt; Back</button>
+    </div>
+
+    <!-- 反馈弹窗 -->
+    <div class="modal" id="smiley-modal">
+        <div class="modal-content">
+            <div class="modal-title">Thank You!</div>
+            <div class="modal-message">Thanks for your positive feedback!</div>
+            <button class="modal-button" id="smiley-modal-close">OK</button>
+        </div>
+    </div>
+
+    <script src="contact.js"></script>
+</body>
+</html>
