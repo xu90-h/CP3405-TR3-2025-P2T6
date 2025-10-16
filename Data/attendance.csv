@@ -1,0 +1,3 @@
+attendance_id,user_id,class_id,reservation_id,timestamp,method
+A01,U01,C01,R01,09:02,QR
+A02,U02,C01,R02,09:05,Seat-based
