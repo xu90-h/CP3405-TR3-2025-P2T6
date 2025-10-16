@@ -1,1 +1,5 @@
-
+seat_id,room,row,column,distance_from_teacher,available,fairness_score
+S01,101,1,1,0.9,1,0.7
+S02,101,1,2,0.8,0,0.5
+S03,101,2,1,0.6,1,0.8
+S04,101,2,2,0.5,1,0.6
