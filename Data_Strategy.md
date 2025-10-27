@@ -42,6 +42,11 @@ These datasets are used to simulate seat usage, reservation history, and attenda
 
 ---
 
+<img width="514" height="137" alt="스크린샷 2025-10-27 14 40 29" src="https://github.com/user-attachments/assets/5fc0558a-2a70-4fd2-b74e-1fa3c1bab8eb" />
+
+
+---
+
 ## Privacy Policy
 - All data is **fake and anonymous**.  
 - No real student names, IDs, or personal information are included.  
