@@ -45,8 +45,6 @@ Clear, instant feedback — users don’t have to close pop-ups manually, improv
 Visually impaired users and keyboard-only users can navigate and interact with seats easily.
 
 ##  Next Week’s Plan
-- Collaborate with team members to **separate the merged HTML code** into modular, maintainable files.  
-  (Currently, all HTML, CSS, and JS are combined into a single file.)  
 - Continue improving **readability, reusability**, and **structure** for easier updates and teamwork.  
-- Prepare a short demo showing the separated version and folder structure.
+- Prepare a short demo showing the separated version and folder structure with DB
 
