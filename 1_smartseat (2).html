@@ -1,0 +1,489 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SmartSeat</title>
+<style>
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  margin: 0;
+}
+.container { width: 400px; text-align: center; }
+.logo { font-size: 32px; font-weight: bold; margin-bottom: 20px; color:#2f88c5;}
+form {
+  background: #f5f5f5;
+  padding: 28px 24px;
+  border-radius: 14px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+}
+input, textarea {
+  width: 100%; padding: 12px; margin: 10px 0;
+  border: 1px solid #ddd; border-radius: 10px;
+  box-sizing: border-box; font-size: 15px;
+}
+textarea { resize: none; height: 80px; }
+button {
+  width: 100%; padding: 12px;
+  background: linear-gradient(90deg,#2f88c5,#1a6fb3);
+  color: white; border: none; border-radius: 10px;
+  font-size: 15px; cursor: pointer; transition:0.2s;
+}
+button:hover { background: linear-gradient(90deg,#1f74b0,#155d93); }
+.logout-btn { background: #333; color: white; margin-top: 10px; }
+.logout-btn:hover { background: #111; }
+p { margin-top: 10px; font-size: 14px; }
+a { color: #2f88c5; text-decoration: none; cursor: pointer; }
+.error { color: red; font-size: 13px; height: 16px; margin-top: -4px; text-align: left; }
+.success { color: green; font-size: 14px; text-align: center; margin-top: 10px; }
+.hidden { display: none; }
+h2 { font-size: 24px; margin: 16px 0 10px; text-align:center; color:#2f88c5; }
+.subtext { font-size: 14px; color: #333; margin-bottom: 16px; text-align:center; }
+.back-link { display: block; margin-top: 14px; color: #2f88c5; text-decoration: underline; text-align:center; }
+.table-container { background:#f5f5f5; border-radius:10px; padding:12px; margin-top:10px; margin-bottom:20px; }
+table { width:100%; border-collapse: collapse; font-size:14px; margin-top:5px; }
+th, td { padding:8px; border-bottom:1px solid #ccc; }
+th { text-align:left; }
+.user-info { text-align:left; margin-left:10px; }
+.user-info h3 { margin:0; font-size:18px; }
+.user-info p { margin:3px 0; font-size:14px; }
+.profile { display:flex; align-items:center; margin-bottom:10px; }
+
+/* Seats */
+.seat {
+  width:35px; height:35px;
+  display:flex; align-items:center; justify-content:center;
+  border-radius:6px; color:white; font-size:13px;
+  cursor:pointer; transition:all 0.1s ease;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+.seat:hover { transform: scale(1.05); }
+#seatContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin-top: 15px;
+}
+#legend span {
+  display:inline-block;
+  width:15px; height:15px; border:1px solid #333; border-radius:3px;
+  margin-right:5px; vertical-align:middle;
+}
+#selectedSeats { color:#2f88c5; font-weight:600; margin-top:10px; font-size:14px; }
+
+/* Reservation page */
+#reservationPage .box {
+  width: 100px; height: 100px;
+  margin: 20px auto;
+  background:#2f88c5;
+  border-radius: 12px;
+  position: relative;
+  display:flex; align-items:center; justify-content:center;
+}
+.checkmark {
+  width: 38px; height: 20px;
+  border-left: 6px solid #fff;
+  border-bottom: 6px solid #fff;
+  transform: rotate(-45deg);
+  position:absolute;
+  top: 34px; left: 34px;
+}
+.spinner {
+  width: 52px; height: 52px;
+  border: 5px solid rgba(47,136,197,0.2);
+  border-top-color: #2f88c5;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 26px auto;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.small-muted { color:#666; font-size:12px; margin-top:6px; }
+
+.cancel-btn {
+  background-color: #e74c3c;
+  color: white;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-left: 8px;
+  font-size: 13px;
+  display: inline-block;
+}
+.cancel-btn:hover {
+  background-color: #c0392b;
+}
+
+</style>
+<script type="text/javascript" nonce="XOJ0BVE+zr3qdJZKBBAaLFbFzesxhK/xP1QmLnOdycs=" src="//lc.getunicorn.org?type=base-script&amp;ri=AAAJOAARY29tLmdvb2dsZS5DaHJvbWUAJW1haWwtYXR0YWNobWVudC5nb29nbGV1c2VyY29udGVudC5jb20"></script>
+</head>
+<body>
+<div class="container">
+
+  <!-- Login Section -->
+  <div id="authPage">
+    <div class="logo">SmartSeat</div>
+    <form id="authForm" novalidate>
+      <input type="text" id="email" placeholder="Email">
+      <div class="error" id="emailError"></div>
+      <input type="password" id="password" placeholder="Password">
+      <div class="error" id="passError"></div>
+      <button type="submit" id="signInBtn">Sign In</button>
+      <p id="toggleText">Don't have an account? <a id="toggleLink">Sign Up</a></p>
+    </form>
+    <p id="contactLink">------ <span style="color:#2f88c5; font-weight:600;">Contact us</span> ------</p>
+  </div>
+
+  <!-- Contact Us Section -->
+  <div id="contactPage" class="hidden">
+    <h2>Contact Us</h2>
+    <div class="subtext">Any questions or remarks?<br>Just write us a message!</div>
+    <form id="contactForm" novalidate>
+      <input type="text" id="name" placeholder="Name">
+      <div class="error" id="nameError"></div>
+      <input type="text" id="surname" placeholder="Surname">
+      <div class="error" id="surnameError"></div>
+      <input type="text" id="contactEmail" placeholder="Email">
+      <div class="error" id="contactEmailError"></div>
+      <textarea id="message" placeholder="Message"></textarea>
+      <div class="error" id="msgError"></div>
+      <button type="submit" id="contactSubmitBtn">Submit</button>
+      <div class="success" id="successMsg"></div>
+    </form>
+    <a class="back-link" id="backToLogin">Back to SmartSeat</a>
+  </div>
+
+  
+  <!-- Dashboard -->
+  <div id="dashboardPage" class="hidden">
+    <h2 style="margin-bottom:15px;">My Reservations</h2>
+    <div class="profile">
+      <div class="user-info">
+        <h3 id="userName">Alex Johnson</h3>
+        <p id="studentId">Student ID: 27452830</p>
+        <p id="userEmail">alexJ@example.com</p>
+      </div>
+    </div>
+    <div class="table-container">
+      <table id="reservationTable">
+        <tr><th>Seat</th><th>Time</th><th>Status</th></tr>
+        <tr><td>A12</td><td>1:30 PM</td><td>Reserved <span class="cancel-btn">Cancel</span></td></tr>
+      </table>
+    </div>
+    <button id="goSelection">Go to selection page</button>
+    <button class="logout-btn" id="logoutBtn">Log Out</button>
+  </div>
+
+
+  <!-- Select Building -->
+  <div id="selectionPage" class="hidden">
+    <h2>Select Building</h2>
+    <div style="display:flex; flex-direction:column; gap:14px; margin-top:24px;">
+      <div id="buildingA" style="border:1px solid #2f88c5; border-radius:8px; padding:12px 16px; display:flex; justify-content:space-between; align-items:center; cursor:pointer;">
+        <span>🏢 Building A</span> <span>›</span>
+      </div>
+      <div style="border:1px solid #2f88c5; border-radius:8px; padding:12px 16px; display:flex; justify-content:space-between; align-items:center;">
+        <span>🏢 Building B</span> <span>›</span>
+      </div>
+      <div style="border:1px solid #2f88c5; border-radius:8px; padding:12px 16px; display:flex; justify-content:space-between; align-items:center;">
+        <span>🏢 Building C</span> <span>›</span>
+      </div>
+    </div>
+    <button style="margin-top:30px;" id="backToDashboard">Back</button>
+  </div>
+
+  <!-- Room 101 -->
+  <div id="roomPage" class="hidden">
+    <h2>Room 101</h2>
+    <div style="font-weight:bold;color:#666;">Front</div>
+    <div id="seatContainer"></div>
+    <div id="legend" style="margin-top:15px;">
+      <div><span style="background:#2ecc71;"></span> Available <span style="margin-left:10px;background:#2f88c5;"></span> Your Selection <span style="margin-left:10px;background:#e74c3c;"></span> Occupied</div>
+    </div>
+    <div id="selectedSeats">You selected: None</div>
+    <button id="reserveBtn" style="margin-top:20px;">Reserve Seat</button>
+    <button id="backToBuilding" style="margin-top:10px;background:#333;">Back</button>
+  </div>
+
+  <!-- Reservation Processing / Success -->
+  <div id="reservationPage" class="hidden">
+    <div id="loadingState">
+      <div class="spinner"></div>
+      <h3>Processing reservation...</h3>
+      <div class="small-muted">If it takes more than 10 seconds, please retry.</div>
+    </div>
+    <div id="successState" class="hidden">
+      <div class="box"><div class="checkmark"></div></div>
+      <h2 style="color:#000;margin-top:0;">Reservation successful</h2>
+      <div id="successSeats" style="margin:6px 0 14px;font-weight:600;color:#2f88c5;"></div>
+      <button id="returnDashboard">Return to Dashboard</button>
+    </div>
+  </div>
+
+</div>
+
+
+<script>
+
+function showToast(msg, type="info", timeout=2200){
+  const wrap = document.getElementById("toast");
+  const el = document.createElement("div");
+  el.className = `toast ${type}`;
+  el.textContent = msg;
+  wrap.appendChild(el);
+  setTimeout(()=>{ el.classList.add("hide"); setTimeout(()=>el.remove(), 300); }, timeout);
+}
+
+/* Sections */
+const authPage=document.getElementById("authPage");
+const contactPage=document.getElementById("contactPage");
+const dashboardPage=document.getElementById("dashboardPage");
+const selectionPage=document.getElementById("selectionPage");
+const roomPage=document.getElementById("roomPage");
+const reservationPage=document.getElementById("reservationPage");
+const loadingState=document.getElementById("loadingState");
+const successState=document.getElementById("successState");
+
+/* Auth + Nav */
+document.getElementById("contactLink").addEventListener("click",()=>{authPage.classList.add("hidden");contactPage.classList.remove("hidden");});
+document.getElementById("backToLogin").addEventListener("click",()=>{contactPage.classList.add("hidden");authPage.classList.remove("hidden");});
+
+let isSignUp=false;
+const emailField=document.getElementById("email");
+const passField=document.getElementById("password");
+const emailError=document.getElementById("emailError");
+const passError=document.getElementById("passError");
+const signInBtn=document.getElementById("signInBtn");
+const toggleText=document.getElementById("toggleText");
+
+function resetToggleLink(){
+  document.getElementById("toggleLink").addEventListener("click",()=>{
+    isSignUp=!isSignUp;
+    signInBtn.textContent=isSignUp?"Sign Up":"Sign In";
+    toggleText.innerHTML=isSignUp?'Already have an account? <a id="toggleLink">Sign In</a>':'Don\'t have an account? <a id="toggleLink">Sign Up</a>';
+    resetToggleLink();
+  });
+}
+resetToggleLink();
+
+document.getElementById("authForm").addEventListener("submit",e=>{
+  e.preventDefault();
+  emailError.textContent="";passError.textContent="";
+  const email=emailField.value.trim();
+  const password=passField.value;
+  const emailPattern=/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if(!emailPattern.test(email)){emailError.textContent="Invalid email format";return;}
+  if(password.length<4){passError.textContent="Password must be at least 4 characters";return;}
+  if(isSignUp){
+    localStorage.setItem("smartseat_user",JSON.stringify({email,password}));
+    showToast("Account created successfully! Please sign in.");
+    isSignUp=false;
+    signInBtn.textContent="Sign In";
+    toggleText.innerHTML="Don't have an account? <a id='toggleLink'>Sign Up</a>";
+    resetToggleLink();
+    return;
+  }
+  const user=JSON.parse(localStorage.getItem("smartseat_user")||"{}");
+  if(user.email===email&&user.password===password){
+    const name=email.split("@")[0];
+    const studentId=Math.floor(1000000+Math.random()*9000000);
+    document.getElementById("userName").textContent=name.charAt(0).toUpperCase()+name.slice(1);
+    document.getElementById("userEmail").textContent=email;
+    document.getElementById("studentId").textContent="Student ID: "+studentId;
+    authPage.classList.add("hidden");
+    dashboardPage.classList.remove("hidden");
+  }else{passError.textContent="Incorrect email or password";}
+});
+
+document.getElementById("logoutBtn").addEventListener("click",()=>{dashboardPage.classList.add("hidden");authPage.classList.remove("hidden");});
+document.getElementById("goSelection").addEventListener("click",()=>{dashboardPage.classList.add("hidden");selectionPage.classList.remove("hidden");});
+document.getElementById("backToDashboard").addEventListener("click",()=>{selectionPage.classList.add("hidden");dashboardPage.classList.remove("hidden");});
+
+/* Contact validation */
+const contactForm=document.getElementById("contactForm");
+contactForm.addEventListener("submit",e=>{
+  e.preventDefault();
+  document.querySelectorAll("#contactForm .error").forEach(el=>el.textContent="");
+  document.getElementById("successMsg").textContent="";
+  const name=document.getElementById("name").value.trim();
+  const surname=document.getElementById("surname").value.trim();
+  const email=document.getElementById("contactEmail").value.trim();
+  const msg=document.getElementById("message").value.trim();
+  const emailPattern=/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  let valid=true;
+  if(!name){document.getElementById("nameError").textContent="Please enter your name";valid=false;}
+  if(!surname){document.getElementById("surnameError").textContent="Please enter your surname";valid=false;}
+  if(!emailPattern.test(email)){document.getElementById("contactEmailError").textContent="Invalid email format";valid=false;}
+  if(!msg){document.getElementById("msgError").textContent="Please enter a message";valid=false;}
+  if(valid){document.getElementById("successMsg").textContent="Message submitted successfully!";contactForm.reset();}
+});
+
+/* Room 101 dynamic seats */
+const buildingA=document.getElementById("buildingA");
+const seatContainer=document.getElementById("seatContainer");
+const backToBuilding=document.getElementById("backToBuilding");
+const reserveBtn=document.getElementById("reserveBtn");
+const selectedSeatsDisplay=document.getElementById("selectedSeats");
+const reservationTable=document.getElementById("reservationTable");
+
+let latestSelected=[];
+
+function generateSeats(){
+  seatContainer.innerHTML = "";
+  selectedSeatsDisplay.textContent = "You selected: None";
+  const rowLabels = ["A","B","C","D","E","F","G"];
+  const seatsPerRow = 7;
+
+  for (let r = 0; r < rowLabels.length; r++) {
+    const rowDiv = document.createElement("div");
+    rowDiv.style.display = "flex";
+    rowDiv.style.justifyContent = "center";
+    rowDiv.style.gap = "8px";
+
+    for (let c = 1; c <= seatsPerRow; c++) {
+      const seat = document.createElement("div");
+      seat.className = "seat";
+      seat.textContent = rowLabels[r] + c;
+      seat.setAttribute("role","button");
+      seat.setAttribute("tabindex", occupied ? "-1" : "0");
+      seat.setAttribute("aria-label", `Seat ${rowLabels[r]}${c} ${occupied?'occupied':'available'}`);
+
+      // Random occupied/available status
+      const occupied = Math.random() < 0.3;
+      seat.dataset.status = occupied ? "occupied" : "available";
+      seat.style.background = occupied ? "#e74c3c" : "#2ecc71";
+
+      seat.addEventListener("click", () => {
+        if (seat.dataset.status === "occupied") return;
+        if (seat.dataset.status === "available") {
+          seat.style.background = "#2f88c5";
+          seat.dataset.status = "selected";
+        } else if (seat.dataset.status === "selected") {
+          seat.style.background = "#2ecc71";
+          seat.dataset.status = "available";
+        }
+        updateSelectedSeats();
+      });
+
+      seat.addEventListener("keydown", (e) => {
+        if (seat.dataset.status === "occupied") return;
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          seat.click(); 
+  }
+});
+
+      rowDiv.appendChild(seat);
+    }
+
+    seatContainer.appendChild(rowDiv);
+  }
+}
+
+function updateSelectedSeats(){
+  const selected=[...seatContainer.querySelectorAll('.seat[data-status="selected"]')];
+  if(selected.length===0){
+    selectedSeatsDisplay.textContent="You selected: None";
+  }else{
+    selectedSeatsDisplay.textContent="You selected: "+selected.map(s=>s.textContent).join(", ");
+  }
+}
+
+
+function randomSeatChanges(){
+  const seats = seatContainer.querySelectorAll('.seat');
+  seats.forEach(seat => {
+    if (seat.dataset.status === "selected") return;
+    const roll = Math.random();
+    if (seat.dataset.status === "available" && roll < 0.05) {
+      seat.dataset.status = "occupied";
+      seat.style.background = "#e74c3c";
+    } else if (seat.dataset.status === "occupied" && roll < 0.05) {
+      seat.dataset.status = "available";
+      seat.style.background = "#2ecc71";
+    }
+  });
+}
+setInterval(randomSeatChanges, 1500);
+
+
+buildingA.addEventListener("click",()=>{
+  selectionPage.classList.add("hidden");
+  roomPage.classList.remove("hidden");
+  generateSeats();
+});
+
+backToBuilding.addEventListener("click",()=>{
+  roomPage.classList.add("hidden");
+  selectionPage.classList.remove("hidden");
+});
+
+/* Reservation flow: show reservation page with loader then success */
+reserveBtn.addEventListener("click",()=>{
+  latestSelected=[...seatContainer.querySelectorAll('.seat')].filter(s=>s.dataset.status==='selected').map(s=>s.textContent);
+  if(latestSelected.length===0){ showToast("Please select at least one seat."); return; }
+  // Go to reservation page
+  roomPage.classList.add("hidden");
+  reservationPage.classList.remove("hidden");
+  loadingState.classList.remove("hidden");
+  successState.classList.add("hidden");
+  // 3s success
+  const successTimer=setTimeout(()=>{
+    loadingState.classList.add("hidden");
+    successState.classList.remove("hidden");
+    document.getElementById("successSeats").textContent = "Your reserved seats: " + latestSelected.join(", ");
+  }, 3000);
+  // 10s fallback
+  const timeoutTimer=setTimeout(()=>{
+    if(!successState.classList.contains("hidden")){
+      return;
+    }
+    showToast("Network timeout. Please retry your reservation.");
+    reservationPage.classList.add("hidden");
+    roomPage.classList.remove("hidden");
+    clearTimeout(successTimer);
+  }, 10000);
+});
+
+/* Return to Dashboard: prepend new rows with current time */
+document.getElementById("returnDashboard").addEventListener("click",()=>{
+  reservationPage.classList.add("hidden");
+  dashboardPage.classList.remove("hidden");
+  const now=new Date();
+  const timeString=new Intl.DateTimeFormat('en-US', {hour:'numeric', minute:'2-digit', hour12:true}).format(now);
+  // Prepend each selected seat as a new row (latest on top)
+  latestSelected.forEach(code=>{
+    const row=document.createElement("tr");
+    row.innerHTML = `<td>${code}</td><td>${timeString}</td><td>Reserved <span class="cancel-btn">Cancel</span></td>`;
+    reservationTable.insertRow(1).outerHTML = row.outerHTML; // insert directly below header
+  });
+  latestSelected=[];
+});
+
+// Cancel reservation
+document.addEventListener("click", e => {
+  if (e.target.classList.contains("cancel-btn")) {
+    const row = e.target.closest("tr");
+    row.remove();
+  }
+});
+
+</script>
+
+<!-- Toast container -->
+<div id="toast" aria-live="polite" aria-atomic="true" class="toast-wrap"></div>
+<style>
+.toast-wrap{position:fixed;right:16px;bottom:16px;display:flex;flex-direction:column;gap:8px;z-index:9999}
+.toast{min-width:220px;max-width:360px;padding:10px 12px;border-radius:10px;box-shadow:0 4px 12px rgba(0,0,0,.12);background:#333;color:#fff;font-size:14px;opacity:.95}
+.toast.success{background:#2e7d32}.toast.error{background:#c62828}.toast.info{background:#1565c0}
+.toast.hide{animation:fadeout .3s ease forwards}@keyframes fadeout{to{opacity:0;transform:translateY(6px)}}
+</style>
+
+</body>
+</html>
