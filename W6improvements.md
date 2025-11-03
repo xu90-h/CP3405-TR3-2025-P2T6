@@ -1,4 +1,4 @@
-<img width="1867" height="1059" alt="스크린샷 2025-11-03 13 01 22" src="https://github.com/user-attachments/assets/52f91b16-9870-470c-a718-19543f26e9f2" />#  SmartSeat Code Improvement Presentation
+#  SmartSeat Code Improvement Presentation
 
 ## Role Update
 Originally, my role was **AI/ML**,  
