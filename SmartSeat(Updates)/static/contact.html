@@ -1,0 +1,130 @@
+<!doctype html>
+<html>
+<head>
+  <title>Contact Us - SmartSeat</title>
+  <style>
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .container {
+      width: 500px;
+      text-align: center;
+    }
+    h2 {
+      font-size: 28px;
+      margin-bottom: 20px;
+      color: #2f88c5;
+    }
+    form {
+      background: #f5f5f5;
+      padding: 34px 28px;
+      border-radius: 16px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    }
+    input, textarea {
+      width: 100%;
+      padding: 13px;
+      margin: 10px 0 5px;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      font-size: 15px;
+      box-sizing: border-box;
+    }
+    textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+    .error {
+      color: red;
+      font-size: 13px;
+      text-align: left;
+      margin-bottom: 10px;
+      display: none;
+    }
+    button {
+      width: 100%;
+      padding: 13px;
+      background: linear-gradient(90deg,#2f88c5,#1a6fb3);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 15px;
+      margin-top: 16px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    button:hover {
+      background: linear-gradient(90deg,#1f74b0,#155d93);
+      box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+    }
+    p {
+      margin-top: 18px;
+      font-size: 14px;
+    }
+    a {
+      color: #2f88c5;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Contact Us</h2>
+    <form id="contactForm" novalidate>
+      <input type="text" id="name" placeholder="Name">
+      <div class="error" id="nameError">Please enter your name</div>
+
+      <input type="text" id="surname" placeholder="Surname">
+      <div class="error" id="surnameError">Please enter your surname</div>
+
+      <input type="text" id="email" placeholder="Email">
+      <div class="error" id="emailError">Please enter a valid email</div>
+
+      <textarea id="message" placeholder="Message"></textarea>
+      <div class="error" id="messageError">Please enter a message</div>
+
+      <button type="submit">Submit</button>
+    </form>
+    <p><a href="login.html">Back to Login</a></p>
+  </div>
+
+  <script>
+    const form = document.getElementById("contactForm");
+
+    form.addEventListener("submit", function(e) {
+      e.preventDefault();
+      let valid = true;
+
+      const emailPattern = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/;
+      const fields = [
+        { id: "name", errorId: "nameError" },
+        { id: "surname", errorId: "surnameError" },
+        { id: "email", errorId: "emailError", pattern: emailPattern },
+        { id: "message", errorId: "messageError" }
+      ];
+
+      fields.forEach(f => {
+        const input = document.getElementById(f.id);
+        const error = document.getElementById(f.errorId);
+        if (!input.value.trim() || (f.pattern && !f.pattern.test(input.value.trim()))) {
+          error.style.display = "block";
+          valid = false;
+        } else {
+          error.style.display = "none";
+        }
+      });
+
+      if (valid) {
+        alert("Message sent!");
+        form.reset();
+      }
+    });
+  </script>
+</body>
+</html>

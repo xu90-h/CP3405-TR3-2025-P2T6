@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Room 101</title>
+<style>
+body { font-family: Arial, sans-serif; background: #fff; display:flex; align-items:center; justify-content:center; height:100vh; margin:0; }
+.container { width:500px; text-align:center; }
+h1 { color:#2f88c5; font-size:36px; margin-bottom:5px; }
+h2 { color:#666; font-size:18px; margin:0 0 20px; }
+.seat { width:40px; height:40px; display:flex; align-items:center; justify-content:center; border-radius:6px; color:white; font-size:13px; cursor:pointer; transition:all 0.1s ease; box-shadow:0 1px 3px rgba(0,0,0,0.2); }
+.seat:hover { transform:scale(1.05); }
+#seatContainer { display:flex; flex-direction:column; align-items:center; gap:10px; margin-top:10px; }
+.legend { font-size:14px; margin-top:15px; }
+.legend span { display:inline-block; width:15px; height:15px; border:1px solid #333; border-radius:3px; margin-right:5px; vertical-align:middle; }
+#selectedSeats { color:#2f88c5; font-weight:bold; margin-top:10px; font-size:15px; }
+button { width:100%; padding:12px; border:none; border-radius:10px; font-size:16px; cursor:pointer; transition:0.2s; margin-top:12px; }
+.reserve { background:#2f88c5; color:white; }
+.reserve:hover { background:#1a6fb3; }
+.back { background:#333; color:white; }
+.back:hover { background:#111; }
+
+/* Wheelchair-only seat style (no !important) */
+.wheelchair[data-status="available"] { background:#f1c40f; }
+.wheelchair[data-status="selected"] { background:#2f88c5; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Room 101</h1>
+  <h2>Front</h2>
+  <div id="seatContainer"></div>
+
+  <div class="legend">
+    <span style="background:#2ecc71;"></span> Available 
+    <span style="margin-left:15px;background:#2f88c5;"></span> Your Selection 
+    <span style="margin-left:15px;background:#e74c3c;"></span> Occupied
+    <span style="margin-left:15px;background:#f1c40f;"></span> Wheelchair Only
+  </div>
+
+  <div id="selectedSeats">You selected: None</div>
+  <button class="reserve">Reserve Seat</button>
+  <button class="back" onclick="window.location='dashboard.html'">Back</button>
+</div>
+<script>
+const seatContainer = document.getElementById('seatContainer');
+const selectedSeats = document.getElementById('selectedSeats');
+
+const wheelchairSeats = ['E1', 'E7', 'F1'];
+const shownAlert = new Set();
+
+function createSeats() {
+  const rows = ['A','B','C','D','E','F','G'];
+  const cols = 7;
+  for (let r of rows) {
+    const row = document.createElement('div');
+    row.style.display = 'flex';
+    row.style.justifyContent = 'center';
+    row.style.gap = '10px';
+    for (let c = 1; c <= cols; c++) {
+      const seatId = r + c;
+      const s = document.createElement('div');
+      s.className = 'seat';
+      s.textContent = seatId;
+
+      if (wheelchairSeats.includes(seatId)) {
+        s.classList.add('wheelchair');
+        s.dataset.status = 'available';
+        s.onclick = () => {
+          if (!shownAlert.has(seatId)) {
+            alert('Please note: this seat is reserved for wheelchair users.');
+            shownAlert.add(seatId);
+          }
+          toggleSeat(s);
+        };
+      } else {
+        s.dataset.status = Math.random() < 0.3 ? 'occupied' : 'available';
+        s.style.background = s.dataset.status === 'occupied' ? '#e74c3c' : '#2ecc71';
+        s.onclick = () => {
+          if (s.dataset.status === 'occupied') return;
+          toggleSeat(s);
+        };
+      }
+      row.appendChild(s);
+    }
+    seatContainer.appendChild(row);
+  }
+}
+
+function toggleSeat(s) {
+  if (s.dataset.status === 'available') {
+    s.dataset.status = 'selected';
+    s.style.background = '#2f88c5';
+  } else if (s.dataset.status === 'selected') {
+    s.dataset.status = 'available';
+    // restore original color based on seat type
+    if (s.classList.contains('wheelchair')) {
+      s.style.background = '#f1c40f';
+    } else {
+      s.style.background = '#2ecc71';
+    }
+  }
+  updateSelection();
+}
+
+function updateSelection() {
+  const sel = [...document.querySelectorAll('.seat[data-status="selected"]')].map(x => x.textContent);
+  selectedSeats.textContent = sel.length ? `You selected: ${sel.join(', ')}` : 'You selected: None';
+}
+
+function randomizeSeats() {
+  document.querySelectorAll('.seat').forEach(s => {
+    if (s.dataset.status === 'selected' || s.classList.contains('wheelchair')) return;
+    if (Math.random() < 0.05) {
+      if (s.dataset.status === 'available') {
+        s.dataset.status = 'occupied';
+        s.style.background = '#e74c3c';
+      } else if (s.dataset.status === 'occupied') {
+        s.dataset.status = 'available';
+        s.style.background = '#2ecc71';
+      }
+    }
+  });
+}
+
+createSeats();
+setInterval(randomizeSeats, 2000); // 2 seconds
+
+document.querySelector(".reserve").addEventListener("click", () => {
+  const selected = [...document.querySelectorAll('.seat[data-status="selected"]')].map(s => s.textContent);
+  if (selected.length === 0) {
+    alert("Please select at least one seat before reserving.");
+    return;
+  }
+  const reservation = {
+    seat: selected.join(', '),
+    time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+  };
+  localStorage.setItem("latestReservation", JSON.stringify(reservation));
+  window.location = 'reservation_status.html';
+});
+</script>
+</body>
+</html>

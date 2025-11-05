@@ -1,0 +1,266 @@
+<!doctype html>
+<html>
+<head>
+  <title>Dashboard - SmartSeat</title>
+  <style>
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .container {
+      width: 500px;
+      text-align: center;
+    }
+    h2 {
+      font-size: 28px;
+      color: #2f88c5;
+      margin-bottom: 28px;
+    }
+    .profile {
+      text-align: left;
+      margin-bottom: 35px;
+      line-height: 1.8;
+    }
+    .profile h3 {
+      font-size: 20px;
+      margin: 0;
+      text-transform: capitalize;
+    }
+    .profile p {
+      margin: 6px 0;
+      font-size: 15px;
+      padding-left: 15px;
+    }
+    /* ✅ Edit Preferences link */
+    .edit-link {
+      font-size: 14px;
+      color: #2f88c5;
+      text-decoration: underline;
+      cursor: pointer;
+      display: block;
+      margin-left: 15px;
+      margin-top: 5px;
+    }
+    .table-container {
+      background: #f5f5f5;
+      border-radius: 14px;
+      padding: 22px;
+      margin-bottom: 30px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 15px;
+    }
+    th, td {
+      padding: 12px 10px;
+      border-bottom: 1px solid #ccc;
+      text-align: left;
+    }
+    td.status {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .cancel-btn {
+      background-color: #e74c3c;
+      color: white;
+      padding: 5px 16px;
+      border-radius: 20px;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 13px;
+    }
+    .cancel-btn:hover {
+      background-color: #c0392b;
+    }
+    button {
+      width: 100%;
+      padding: 14px;
+      margin-top: 15px;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .blue-btn {
+      background: linear-gradient(90deg, #2f88c5, #1a6fb3);
+      color: white;
+    }
+    .blue-btn:hover {
+      background: linear-gradient(90deg, #1f74b0, #155d93);
+    }
+    .dark-btn {
+      background: #333;
+      color: white;
+    }
+    .dark-btn:hover {
+      background: #111;
+    }
+
+    /* Popup modal */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 10;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.4);
+      justify-content: center;
+      align-items: center;
+    }
+    .modal-content {
+      background: #fff;
+      padding: 25px 30px;
+      border-radius: 12px;
+      text-align: left;
+      width: 320px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+    .modal h3 {
+      margin-top: 0;
+      color: #2f88c5;
+      font-size: 20px;
+      text-align: center;
+    }
+    .checkbox-group label {
+      display: flex;
+      align-items: center;
+      margin: 10px 0;
+      font-size: 15px;
+      cursor: pointer;
+    }
+    .checkbox-group input {
+      margin-right: 10px;
+    }
+    .close-btn {
+      display: block;
+      width: 100%;
+      margin-top: 20px;
+      padding: 10px;
+      border: none;
+      background: #2f88c5;
+      color: white;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.2s;
+      font-size: 15px;
+    }
+    .close-btn:hover {
+      background: #1a6fb3;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>My Reservations</h2>
+
+    <div class="profile">
+      <h3 id="studentName"></h3>
+      <p id="studentId"></p>
+      <p id="studentEmail"></p>
+      <span class="edit-link" id="editPreferences">Edit Preferences</span> <!-- ✅ now visible -->
+    </div>
+
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr><th>Seat</th><th>Time</th><th>Status</th></tr>
+        </thead>
+        <tbody id="reservationBody"></tbody>
+      </table>
+    </div>
+
+    <button class="blue-btn" onclick="window.location='select_building.html'">Go to selection page</button>
+    <button class="dark-btn" onclick="window.location='login.html'">Log Out</button>
+  </div>
+
+  <!-- ✅ Popup modal -->
+  <div class="modal" id="preferencesModal">
+    <div class="modal-content">
+      <h3>Edit Preferences</h3>
+      <div class="checkbox-group">
+        <label><input type="checkbox" id="pref1"> Prefer Shortest Distance</label>
+        <label><input type="checkbox" id="pref2"> Wheelchair Friendly</label>
+        <label><input type="checkbox" id="pref3"> Elevator Priority</label>
+      </div>
+      <button class="close-btn" id="closeModal">Close</button>
+    </div>
+  </div>
+
+  <script>
+    const email = localStorage.getItem("loggedEmail") || "unknown@my.jcu.edu.au";
+
+    function formatNameFromEmail(email) {
+      const namePart = email.split("@")[0];
+      const parts = namePart.split(".");
+      return parts.map(p => p.charAt(0).toUpperCase() + p.slice(1)).join(" ");
+    }
+
+    function generateStudentId() {
+      return Math.floor(1000000 + Math.random() * 9000000);
+    }
+
+    document.getElementById("studentName").textContent = formatNameFromEmail(email);
+    document.getElementById("studentEmail").textContent = email;
+    document.getElementById("studentId").textContent = "Student ID: " + generateStudentId();
+
+    // Reservation
+    const reservationBody = document.getElementById("reservationBody");
+    const latest = JSON.parse(localStorage.getItem("latestReservation"));
+    if (latest) {
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td>${latest.seat}</td>
+        <td>${latest.time}</td>
+        <td class="status">Reserved <span class="cancel-btn" onclick="cancelReservation(this)">Cancel</span></td>
+      `;
+      reservationBody.appendChild(row);
+    } else {
+      reservationBody.innerHTML = `<tr><td colspan="3">No current reservations</td></tr>`;
+    }
+
+    function cancelReservation(btn) {
+      const row = btn.closest("tr");
+      if (confirm("Are you sure you want to cancel this reservation?")) {
+        row.remove();
+        localStorage.removeItem("latestReservation");
+      }
+    }
+
+    // ✅ Preferences popup
+    const modal = document.getElementById("preferencesModal");
+    const editBtn = document.getElementById("editPreferences");
+    const closeBtn = document.getElementById("closeModal");
+    const prefs = ["pref1", "pref2", "pref3"];
+
+    // Load saved preferences
+    prefs.forEach(id => {
+      const saved = localStorage.getItem(id);
+      if (saved === "true") document.getElementById(id).checked = true;
+    });
+
+    editBtn.addEventListener("click", () => modal.style.display = "flex");
+
+    closeBtn.addEventListener("click", () => {
+      prefs.forEach(id => {
+        localStorage.setItem(id, document.getElementById(id).checked);
+      });
+      modal.style.display = "none";
+    });
+
+    window.addEventListener("click", (e) => {
+      if (e.target === modal) modal.style.display = "none";
+    });
+  </script>
+</body>
+</html>

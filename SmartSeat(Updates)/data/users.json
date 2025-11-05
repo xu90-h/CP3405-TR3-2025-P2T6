@@ -1,0 +1,22 @@
+{
+  "Tjohn@jcu.edu.au": {
+    "password": "teacher123",
+    "name": "John Smith",
+    "type": "teacher"
+  },
+  "S123456@my.jcu.edu.au": {
+    "password": "student456",
+    "name": "Alice Johnson",
+    "type": "student"
+  },
+  "Tjane@jcu.edu.au": {
+    "password": "teacherpass",
+    "name": "Jane Doe",
+    "type": "teacher"
+  },
+  "S789012@my.jcu.edu.au": {
+    "password": "studentpass",
+    "name": "Bob Williams",
+    "type": "student"
+  }
+}

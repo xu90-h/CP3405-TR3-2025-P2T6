@@ -1,0 +1,180 @@
+<!doctype html>
+<html>
+<head>
+  <title>Login - SmartSeat</title>
+  <style>
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .container {
+      width: 500px;
+      text-align: center;
+    }
+    .logo {
+      font-size: 32px;
+      font-weight: bold;
+      margin-bottom: 28px;
+      color: #2f88c5;
+    }
+    form {
+      background: #f5f5f5;
+      padding: 48px 36px;
+      border-radius: 16px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    }
+    input {
+      width: 100%;
+      padding: 14px;
+      margin: 18px 0;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      box-sizing: border-box;
+      font-size: 16px;
+    }
+    .error {
+      color: red;
+      font-size: 13px;
+      text-align: left;
+      margin-bottom: 8px;
+      display: none;
+    }
+    .info {
+      color: #666;
+      font-size: 12px;
+      text-align: left;
+      margin: 5px 0 15px;
+      padding: 8px;
+      background: #e8f4fc;
+      border-radius: 5px;
+      border-left: 3px solid #2f88c5;
+    }
+    button {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(90deg, #2f88c5, #1a6fb3);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: 0.2s;
+      margin-top: 22px;
+    }
+    button:hover {
+      background: linear-gradient(90deg, #1f74b0, #155d93);
+      box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+    }
+
+    p {
+      font-size: 15px;
+      margin-top: 28px;
+      color: #2f88c5;
+      font-weight: bold;
+      position: relative;
+      display: inline-block;
+    }
+    p::before,
+    p::after {
+      content: "------";
+      color: #bbb;
+      margin: 0 10px;
+      font-weight: normal;
+    }
+    a {
+      color: #2f88c5;
+      text-decoration: none;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="logo">SmartSeat</div>
+    <form id="loginForm" novalidate>
+      <input type="text" id="email" placeholder="Email (Starts with S for Student / T for Teacher)">
+      <div class="info">Student account: Starts with S (e.g., S123456@my.jcu.edu.au)<br>Teacher account: Starts with T (e.g., Tjohn@jcu.edu.au)</div>
+      <div class="error" id="emailError">Please enter a valid email address (starting with S or T)</div>
+
+      <input type="password" id="password" placeholder="Password">
+      <div class="error" id="passwordError">Please enter a password (at least 4 characters)</div>
+
+      <button type="submit">Sign In</button>
+    </form>
+    <p><a href=" ">Contact Us</a ></p >
+  </div>
+
+  <script>
+    const form = document.getElementById("loginForm");
+    form.addEventListener("submit", function(e) {
+      e.preventDefault();
+      let valid = true;
+
+      const email = document.getElementById("email");
+      const password = document.getElementById("password");
+      const emailError = document.getElementById("emailError");
+      const passwordError = document.getElementById("passwordError");
+
+      const emailPattern = /^[ST][^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+      // Email check - must start with S or T
+      if (!email.value.trim() || !emailPattern.test(email.value.trim())) {
+        emailError.textContent = "Please enter a valid email address (must start with S or T)";
+        emailError.style.display = "block";
+        valid = false;
+      } else {
+        emailError.style.display = "none";
+      }
+
+      // Password check (minimum 4 chars)
+      if (!password.value.trim() || password.value.trim().length < 4) {
+        passwordError.textContent = "Password must be at least 4 characters";
+        passwordError.style.display = "block";
+        valid = false;
+      } else {
+        passwordError.style.display = "none";
+      }
+
+      if (valid) {
+        // 发送登录请求到后端
+        fetch('/api/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email: email.value.trim(),
+            password: password.value.trim()
+          })
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            localStorage.setItem("loggedEmail", email.value.trim());
+            localStorage.setItem("userType", data.user.type);
+            localStorage.setItem("userName", data.user.name);
+            
+            // 根据用户类型跳转到不同页面
+            if (data.user.type === 'teacher') {
+              window.location = "teacher_dashboard.html";
+            } else {
+              window.location = "dashboard.html";
+            }
+          } else {
+            alert(data.msg || "Login failed");
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          alert("An error occurred during login");
+        });
+      }
+    });
+  </script>
+</body>
+</html>

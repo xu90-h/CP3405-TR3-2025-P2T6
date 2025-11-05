@@ -1,0 +1,52 @@
+{
+  "101": [
+    {
+      "code": "A1",
+      "status": "available"
+    },
+    {
+      "code": "A2",
+      "status": "available"
+    },
+    {
+      "code": "A3",
+      "status": "available"
+    },
+    {
+      "code": "A4",
+      "status": "available"
+    },
+    {
+      "code": "B1",
+      "status": "available"
+    },
+    {
+      "code": "B2",
+      "status": "available"
+    },
+    {
+      "code": "B3",
+      "status": "available"
+    },
+    {
+      "code": "B4",
+      "status": "available"
+    },
+    {
+      "code": "C1",
+      "status": "available"
+    },
+    {
+      "code": "C2",
+      "status": "available"
+    },
+    {
+      "code": "C3",
+      "status": "available"
+    },
+    {
+      "code": "C4",
+      "status": "available"
+    }
+  ]
+}

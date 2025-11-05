@@ -1,0 +1,85 @@
+<!doctype html>
+<html>
+<head>
+  <title>Select Building - SmartSeat</title>
+  <style>
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .container {
+      width: 500px;
+      text-align: center;
+    }
+    h2 {
+      font-size: 28px;
+      margin: 16px 0 20px;
+      text-align: center;
+      color: #2f88c5;
+      font-weight: bold;
+    }
+
+    .building-btn {
+      width: 100%;
+      padding: 14px;
+      border: 2px solid #2f88c5;
+      border-radius: 12px;
+      background: white;
+      color: #2f88c5;
+      font-size: 16px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-left: 16px;
+      padding-right: 18px;
+    }
+    .building-btn:hover {
+      background: linear-gradient(90deg, #2f88c5, #1a6fb3);
+      color: white;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.12);
+    }
+
+    .back-btn {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(90deg, #2f88c5, #1a6fb3);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      margin-top: 30px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .back-btn:hover {
+      background: linear-gradient(90deg, #1f74b0, #155d93);
+    }
+
+    .btn-group {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      margin-top: 30px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Select Building</h2>
+    <div class="btn-group">
+      <button class="building-btn" onclick="window.location='select_seat.html'">🏢 Building A <span>›</span></button>
+      <button class="building-btn">🏢 Building B <span>›</span></button>
+      <button class="building-btn">🏢 Building C <span>›</span></button>
+    </div>
+    <button class="back-btn" onclick="window.location='dashboard.html'">Back</button>
+  </div>
+</body>
+</html>

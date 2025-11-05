@@ -1,0 +1,23 @@
+<!doctype html>
+<html>
+<head>
+<title>Reservation Successful - SmartSeat</title>
+<style>
+body { font-family: Arial, Helvetica, sans-serif; background: #fff; display:flex; align-items:center; justify-content:center; height:100vh; margin:0; }
+.container { width:400px; text-align:center; }
+h2 { color:#2f88c5; margin-bottom:10px; }
+.box { width:100px; height:100px; background:#2f88c5; border-radius:12px; margin:20px auto; position:relative; display:flex; align-items:center; justify-content:center; }
+.checkmark { width:38px; height:20px; border-left:6px solid #fff; border-bottom:6px solid #fff; transform:rotate(-45deg); position:absolute; top:34px; left:34px; }
+button { width:100%; padding:12px; background:#2f88c5; color:white; border:none; border-radius:10px; font-size:15px; cursor:pointer; transition:0.2s; }
+button:hover { background:#1a6fb3; }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="box"><div class="checkmark"></div></div>
+  <h2>Reservation Successful</h2>
+  <p>Your seat has been successfully reserved!</p>
+  <button onclick="window.location='dashboard.html'">Return to Dashboard</button>
+</div>
+</body>
+</html>
