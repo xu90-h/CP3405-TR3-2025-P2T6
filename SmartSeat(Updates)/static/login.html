@@ -141,7 +141,6 @@
       }
 
       if (valid) {
-        // 发送登录请求到后端
         fetch('/api/login', {
           method: 'POST',
           headers: {
@@ -158,12 +157,11 @@
             localStorage.setItem("loggedEmail", email.value.trim());
             localStorage.setItem("userType", data.user.type);
             localStorage.setItem("userName", data.user.name);
-            
-            // 根据用户类型跳转到不同页面
+
             if (data.user.type === 'teacher') {
-              window.location = "teacher_dashboard.html";
+              window.location = "/teacher_dashboard";
             } else {
-              window.location = "dashboard.html";
+              window.location = "/dashboard";
             }
           } else {
             alert(data.msg || "Login failed");

@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Room Stats</title>
+  <style>
+    :root { --pad: 16px; --radius: 14px; --fg:#111; --muted:#6b7280; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, "Noto Sans SC", sans-serif;
+           margin:0; color:var(--fg); background:#fff; }
+    header { display:flex; align-items:center; gap:10px; padding: var(--pad); }
+    header .back { width:28px; height:28px; border-radius:50%; border:1px solid #e5e7eb;
+                   display:grid; place-items:center; cursor:pointer; }
+    h1 { font-size:22px; margin:0 auto 0 6px; }
+    .legend { font-size:12px; color:var(--muted); display:flex; gap:14px; margin:6px var(--pad) 0; }
+    .legend span { display:inline-flex; align-items:center; gap:6px; cursor: pointer; }
+    .dot { width:10px; height:10px; border-radius:2px; display:inline-block; }
+    .dot.green{ background:#22c55e; }  /* on-time */
+    .dot.yellow{ background:#f59e0b; } /* late */
+    .dot.gray{ background:#e5e7eb; }   /* empty */
+
+    main { padding: var(--pad); display:flex; flex-direction:column; gap:18px; }
+    .card { border:1px solid #f1f5f9; border-radius: var(--radius); padding: var(--pad); box-shadow: 0 1px 2px rgba(0,0,0,.03); }
+    .row { display:flex; gap:16px; align-items:center; }
+    .grow { flex:1;
+        /* Add these rules to shift content to the right */
+        padding-left: 20px; /* Adjust this value as needed */
+        text-align: left; /* Ensure text is aligned to the left within the shifted area */
+    }
+
+    /* Correct Kpi display to be row, not column*/
+    .kpi { font-size:14px; color:var(--muted); display:flex; flex-direction: row; gap:16px; }
+    .label { font-size:13px; color:var(--muted); margin-bottom:8px; }
+
+    .kpi strong { color:#111; font-size:18px; margin-right:4px; }
+
+    @media (min-width: 680px) {
+      main { max-width: 420px; margin: 0 auto; }
+    }
+    canvas { width:100%; height:auto; }
+
+    #donut { width:100%; max-width:360px; aspect-ratio:1/1; }
+
+    #line { width:100%; max-width:360px; height:180px; }
+    footer { height:18px; }
+    /* 添加这一段：直接设置 KPI div 的内边距 */
+    .kpi > div {
+        padding-right: 15px; /* 调整这个值来控制右侧间距 */
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="back" onclick="history.back()" aria-label="Back">←</div>
+    <h1 id="roomTitle">Room 101</h1>
+  </header>
+
+  <div class="legend" aria-hidden="true">
+    <span id="emptyLegend"><i class="dot gray"></i> empty(<span id="emptyCountLegend">0</span>)</span>
+    <span id="onTimeLegend"><i class="dot green"></i> on-time(<span id="onTimeCountLegend">1</span>)</span>
+    <span id="lateLegend"><i class="dot yellow"></i> late(<span id="lateCountLegend">2</span>)</span>
+  </div>
+
+  <main>
+    <!-- Ring chart + KPI -->
+    <section class="card">
+      <div class="row">
+        <canvas id="donut" width="360" height="360" aria-label="Attendance Donut Chart"></canvas>
+        <div class="grow">
+          <div class="label">Attendance</div>
+          <div class="kpi">
+            <div><strong id="occupancyPct">--%</strong><span>Occupancy rate</span></div>
+            <div><strong id="absencePct">--%</strong><span>Absence rate</span></div>
+          </div>
+          <div class="kpi" style="margin-top:10px;">
+            <div><strong id="onTimeCount">0</strong><span>On-time</span></div>
+            <div><strong id="lateCount">0</strong><span>Late</span></div>
+            <div><strong id="emptyCount">0</strong><span>Empty</span></div>
+          </div>
+          <div class="kpi" style="margin-top:10px;">
+            <div><strong id="totalCount">0</strong><span>Total</span></div>
+          </div>
+        </div>
+      </div>
+       <button id="refreshButton">Refresh</button>
+    </section>
+
+    <!-- Lightweight simulated trend line -->
+    <section class="card">
+      <div class="label">Classroom Occupancy Trend Simulation</div>
+      <canvas id="line" width="360" height="180" aria-label="Occupancy Trend Line Chart"></canvas>
+    </section>
+  </main>
+
+  <footer></footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+
+    // Function to fetch and update data
+
+    function updateRoomData() {
+    const roomTitle = document.getElementById("roomTitle").innerText;
+    // Fetch data from API endpoint
+    fetch(`/api/room_stats/${roomTitle}`)
+    .then(response => response.json())
+    .then(data => {
+      // Ensure data is valid
+      if (!data || !data.counts || !data.rates) {
+        console.error('Invalid data received from API:', data);
+        return;
+      }
+
+      // Update KPI values in the DOM
+      document.getElementById("occupancyPct").innerText = (data.rates.occupancy * 100).toFixed(1) + "%";
+      document.getElementById("absencePct").innerText = (data.rates.absence * 100).toFixed(1) + "%";
+      document.getElementById("onTimeCount").innerText = data.counts.on_time;
+      document.getElementById("lateCount").innerText = data.counts.late;
+      document.getElementById("emptyCount").innerText = data.counts.empty;
+      document.getElementById("totalCount").innerText = data.total;
+
+      document.getElementById("emptyCountLegend").innerText = data.counts.empty;
+      document.getElementById("onTimeCountLegend").innerText = data.counts.on_time;
+      document.getElementById("lateCountLegend").innerText = data.counts.late;
+
+      // Prepare data for the donut chart
+      const segments = [
+        { value: data.counts.empty, color: '#e5e7eb', label: 'Empty' },
+        { value: data.counts.on_time, color: '#22c55e', label: 'On-time' },
+        { value: data.counts.late, color: '#f59e0b', label: 'Late' }
+      ];
+       drawDonut(document.getElementById("donut"), segments, { centerText: `${(data.rates.occupancy * 100).toFixed(1)}%` })
+
+      // Prepare data for the line chart (You'll need a new API endpoint to fetch time series data)
+      const lineChartData = [0.7, 0.78, 0.6, 0.9, 0.75]
+      const lineChartLabels = ["Mon", "Tue", "Wed", "Thu", "Fri"]
+      drawLine(document.getElementById("line"), lineChartData, lineChartLabels);
+    })
+    .catch(error => {
+      console.error('Error fetching data:', error);
+    });
+  }
+
+    function getRoomFromQuery() {
+      const p = new URLSearchParams(location.search);
+      return decodeURIComponent(p.get('room') || 'Room 101');
+    }
+
+    function drawDonut(canvas, segments, options = {}) {
+      const ctx = canvas.getContext('2d');
+      const W = canvas.width, H = canvas.height;
+      const cx = W/2, cy = H/2;
+      const rOuter = Math.min(W, H)/2 - 6;
+      const rInner = rOuter * 0.60;
+
+      ctx.clearRect(0,0,W,H);
+
+      ctx.beginPath(); ctx.lineWidth = rOuter - rInner;
+      ctx.strokeStyle = '#f1f5f9';
+      ctx.arc(cx, cy, (rOuter + rInner)/2, 0, Math.PI*2);
+      ctx.stroke();
+
+      const total = segments.reduce((s, x) => s + x.value, 0) || 1;
+      let start = -Math.PI/2;
+      segments.forEach(seg => {
+        const angle = (seg.value/total) * Math.PI*2;
+        ctx.beginPath(); ctx.lineWidth = rOuter - rInner;
+        ctx.strokeStyle = seg.color;
+        ctx.arc(cx, cy, (rOuter + rInner)/2, start, start + angle);
+        ctx.stroke();
+        start += angle;
+        });
+
+
+      if (options.centerText) {
+        ctx.fillStyle = '#111';
+        ctx.font = 'bold 28px system-ui, -apple-system, Segoe UI, Roboto, Arial';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(options.centerText, cx, cy);
+      }
+    }
+
+      function drawLine(canvas, data, labels) {
+          const ctx = canvas.getContext('2d');
+          const W = canvas.width, H = canvas.height;
+          const pad = 28;
+
+          ctx.clearRect(0, 0, W, H);
+
+
+          ctx.strokeStyle = '#e5e7eb';
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.moveTo(pad, H - pad);
+          ctx.lineTo(W - pad, H - pad);
+          ctx.moveTo(pad, H - pad);
+          ctx.lineTo(pad, pad);
+          ctx.stroke();
+          ctx.font = 'normal 11px system-ui, -apple-system, Segoe UI, Roboto, Arial';
+          ctx.fillStyle = '#9ca3af';
+        ctx.textAlign = 'center';
+        labels.forEach((label, i) => {
+          const x = pad + (i / (labels.length - 1)) * (W - 2 * pad);
+          ctx.fillText(label, x, H - pad + 14);
+        });
+        ctx.textAlign = 'right';
+
+        data.forEach((value, i) => {
+            ctx.beginPath();
+            ctx.fillStyle = '#d1d5db';
+
+            const x = pad + (i / (labels.length - 1)) * (W - 2 * pad);
+            const y = H - pad - value * (H - 2 * pad);
+
+            ctx.arc(x, y, 2.5, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.beginPath();
+            ctx.strokeStyle = '#2563eb';
+            ctx.lineWidth = 2;
+            ctx.arc(x, y, 2.5, 0, Math.PI * 2);
+            ctx.stroke();
+            if (i > 0) {
+                const prevX = pad + ((i - 1) / (labels.length - 1)) * (W - 2 * pad);
+                const prevY = H - pad - data[i - 1] * (H - 2 * pad);
+                ctx.beginPath();
+                ctx.moveTo(prevX, prevY);
+                ctx.lineTo(x, y);
+                ctx.stroke();
+            }
+        });
+}
+
+
+    // Call update function every 5 seconds
+    setInterval(updateRoomData, 5000);
+
+    // Load data on page load
+
+    document.addEventListener("DOMContentLoaded", function() {
+        // Get the room title from the query parameter
+      const roomTitle = getRoomFromQuery();
+      document.getElementById("roomTitle").innerText = roomTitle;
+
+      // Add event listener to refresh button
+       document.getElementById("refreshButton").addEventListener("click", updateRoomData);
+
+        // Call the update function to display content
+        updateRoomData();
+
+    });
+    </script>
+</body>
+</html>
