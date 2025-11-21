@@ -1,0 +1,33 @@
+{
+  "users": [
+    {
+      "user_id": "user1",
+      "history_seats": [
+        "A5",
+        "C5"
+      ],
+      "recommended_seats": [
+        "C4",
+        "C4",
+        "C4",
+        "C4"
+      ],
+      "selected_seats": [
+        "A5"
+      ]
+    },
+    {
+      "user_id": "user2",
+      "history_seats": [
+        "F7"
+      ],
+      "recommended_seats": [
+        "C4",
+        "C4"
+      ],
+      "selected_seats": [
+        "F7"
+      ]
+    }
+  ]
+}
