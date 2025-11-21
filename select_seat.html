@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Smart Seat Selection</title>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background: #f5f7fa;
+      display: flex; justify-content: center; align-items: center;
+      min-height: 100vh; padding: 20px;
+    }
+    .container {
+      width: 100%; max-width: 520px; background: #fff;
+      border-radius: 24px; box-shadow: 0 15px 45px rgba(0,0,0,0.12);
+      padding: 36px 30px; text-align: center;
+    }
+    h1 { font-size:34px; color:#3498db; margin-bottom:6px; font-weight:600; }
+    h2 { font-size:18px; color:#95a5a6; margin-bottom:32px; }
+
+    #seatContainer { display:flex; flex-direction:column; gap:16px; margin:30px 0; }
+    .row { display:flex; justify-content:center; gap:14px; }
+
+    /* Default available seat */
+    .seat {
+      width:52px; height:52px; border-radius:16px;
+      background:#2ecc71; color:white; font-weight:bold; font-size:15px;
+      display:flex; align-items:center; justify-content:center;
+      cursor:pointer; transition:all .25s;
+      box-shadow:0 4px 12px rgba(46,204,113,.3);
+    }
+    .seat:hover:not([data-status="occupied"]) {
+      transform:translateY(-4px);
+      box-shadow:0 12px 24px rgba(46,204,113,.4);
+    }
+    [data-status="occupied"]   { background:#e74c3c !important; cursor:not-allowed; box-shadow:0 4px 12px rgba(231,76,60,.3); }
+    [data-status="selected"]   { background:#3498db !important; transform:scale(1.1); box-shadow:0 0 25px rgba(52,152,219,.6); }
+    [data-type="wheelchair"]   { background:#f1c40f !important; color:#000 !important; }
+
+    /* AI recommendation highlight */
+    .ai-recommended {
+      animation: aiPulse 1.8s infinite;
+      box-shadow: 0 0 35px #9b59b6 !important;
+      transform: scale(1.2) !important;
+    }
+    @keyframes aiPulse {
+      0%,100% { box-shadow: 0 0 35px #9b59b6; }
+      50%     { box-shadow: 0 0 60px #e91ee3; }
+    }
+
+    .legend { display:flex; justify-content:center; gap:24px; margin:28px 0; font-size:15px; color:#7f8c8d; }
+    .legend-item { display:flex; align-items:center; gap:8px; }
+    .legend-color { width:20px; height:20px; border-radius:8px; }
+
+    #selectedSeats { margin:20px 0; font-size:19px; color:#3498db; font-weight:bold; }
+
+    button {
+      width:100%; padding:18px; border:none; border-radius:20px;
+      font-size:18px; font-weight:bold; cursor:pointer; margin:12px 0;
+      transition:all .2s;
+    }
+    #aiRecommendBtn {
+      background:linear-gradient(135deg,#9b59b6,#8e44ad);
+      color:white; box-shadow:0 8px 25px rgba(155,89,182,.4);
+    }
+    #aiRecommendBtn:hover:not(:disabled) { transform:translateY(-3px); box-shadow:0 15px 35px rgba(155,89,182,.5); }
+    #aiRecommendBtn:disabled { background:#bdc3c7; cursor:not-allowed; }
+    .reserve { background:#3498db; color:white; }
+    .reserve:hover { background:#2980b9; }
+    .back { background:#2c3e50; color:white; }
+    .back:hover { background:#1a252f; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 id="roomTitle">Room null3</h1>
+    <h2 id="floorTitle">Floor null</h2>
+    <div id="seatContainer"></div>
+
+    <div class="legend">
+      <div class="legend-item"><div class="legend-color" style="background:#2ecc71"></div><span>Available</span></div>
+      <div class="legend-item"><div class="legend-color" style="background:#3498db"></div><span>Selected</span></div>
+      <div class="legend-item"><div class="legend-color" style="background:#e74c3c"></div><span>Occupied</span></div>
+      <div class="legend-item"><div class="legend-color" style="background:#f1c40f"></div><span>Wheelchair Only</span></div>
+    </div>
+
+    <div id="selectedSeats">You selected: None</div>
+
+    <button id="aiRecommendBtn">AI Smart Seat Recommendation</button>
+    <button class="reserve">Reserve Seat</button>
+    <button class="back" onclick="history.back()">Back</button>
+  </div>
+
+  <script>
+    // Parse URL parameters
+    const params = new URLSearchParams(location.search);
+    const building = params.get("building") || "null";
+    const floor    = params.get("floor")    || "";
+    const roomName = params.get("room")     || "Room null3";
+
+    document.getElementById("roomTitle").textContent = roomName;
+    document.getElementById("floorTitle").textContent = `Floor ${floor}`;
+
+    const pureRoom      = roomName.replace("Room ", "");
+    const wheelchairSeats = ["E1","E7","F1"];
+    const occupiedSeats  = ["B3","D5","F2","G4"];  // Permanently occupied
+
+    const container       = document.getElementById("seatContainer");
+    const selectedDisplay = document.getElementById("selectedSeats");
+
+    // Create seat grid
+    function createSeats() {
+      container.innerHTML = "";
+      const rows = "ABCDEFG";
+
+      for (const r of rows) {
+        const row = document.createElement("div");
+        row.className = "row";
+        for (let c = 1; c <= 7; c++) {
+          const id = r + c;
+          const seat = document.createElement("div");
+          seat.className = "seat";
+          seat.textContent = id;
+          seat.dataset.seat = id;
+
+          if (wheelchairSeats.includes(id)) seat.dataset.type = "wheelchair";
+          if (occupiedSeats.includes(id)) seat.dataset.status = "occupied";
+
+          // Critical fix: Never allow clicking occupied seats, and never change their status
+          seat.onclick = () => {
+            if (seat.dataset.status === "occupied") return;  // Occupied seats are untouchable
+
+            // Only clear selection from NON-occupied seats
+            document.querySelectorAll('.seat:not([data-status="occupied"])').forEach(s => {
+              if (s !== seat) s.dataset.status = "";
+            });
+
+            // Toggle current seat (only available seats)
+            if (seat.dataset.status === "selected") {
+              seat.dataset.status = "";
+            } else {
+              seat.dataset.status = "selected";
+            }
+            updateSelectedText();
+          };
+          row.appendChild(seat);
+        }
+        container.appendChild(row);
+      }
+    }
+
+    // Update selection display text
+    function updateSelectedText() {
+      const sel = document.querySelector('[data-status="selected"]');
+      selectedDisplay.textContent = sel ? `You selected: ${sel.textContent}` : "You selected: None";
+    }
+
+    createSeats();
+
+    // AI Recommendation - only highlights available seats
+    document.getElementById("aiRecommendBtn").addEventListener("click", async () => {
+      const btn = document.getElementById("aiRecommendBtn");
+      btn.disabled = true;
+      btn.textContent = "AI is thinking...";
+
+      try {
+        const userId = localStorage.getItem("loggedEmail") || "guest@example.com";
+        const res = await fetch("http://127.0.0.1:5000/recommend", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ user_id: userId, building, floor, room: pureRoom })
+        });
+
+        if (!res.ok) throw new Error();
+
+        const data = await res.json();
+        const recommended = data.recommended_seats || [];
+
+        // Clear highlights ONLY from non-occupied seats
+        document.querySelectorAll('.seat:not([data-status="occupied"])')
+                .forEach(s => s.classList.remove('ai-recommended'));
+
+        // Highlight recommended available seats only
+        recommended.forEach(id => {
+          const el = document.querySelector(`.seat[data-seat="${id}"]`);
+          if (el && el.dataset.status !== "occupied") {
+            el.classList.add('ai-recommended');
+            el.scrollIntoView({ behavior: "smooth", block: "center" });
+          }
+        });
+
+        alert(`AI recommends: ${recommended.join(" • ")}\nThese seats are now highlighted!`);
+
+      } catch (e) {
+        console.error(e);
+        alert("AI service unavailable. Please ensure main.py is running on port 5000.");
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "AI Smart Seat Recommendation";
+      }
+    });
+
+    // Reserve button
+    document.querySelector(".reserve").onclick = () => {
+      const sel = document.querySelector('[data-status="selected"]');
+      if (!sel) return alert("Please select a seat first.");
+      alert(`Seat ${sel.textContent} reserved successfully!`);
+    };
+  </script>
+</body>
+</html>
