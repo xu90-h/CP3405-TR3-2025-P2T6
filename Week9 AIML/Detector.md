@@ -26,3 +26,28 @@ Perfect for quick attendance, classroom monitoring, teaching evaluation, or rese
 |------------------------------------------|------------------------------------------------|
 | ![original](start.png)         | ![detected](end.png)               |
 
+## Attendance Statistics & Occupancy Trend (New Feature)
+
+After the student detection is completed, click the **"Refresh"** / **"View Statistics"** button (or the page auto-refreshes), and you will instantly see two powerful analytical charts:
+
+### 1. Real-time Attendance Donut Chart
+Displays today's attendance status in an intuitive ring chart:
+
+![Attendance Pie Chart](attendance_pie.png)
+
+
+### 2. Weekly Occupancy Trend Simulation (LSTM-powered)
+A 7-day classroom occupancy forecast generated using **Long Short-Term Memory (LSTM)** neural network based on historical detection data.
+
+![Occupancy Trend Simulation](occupancy_trend.png)
+
+**Technical Highlights**  
+- Model: LSTM (Long Short-Term Memory) recurrent neural network  
+- Input: Past 4 weeks of per-day student count data  
+- Output: Predicted occupancy rate (%) for the next 7 days  
+- Automatically retrains every day with new detection results  
+- Helps teachers and administrators plan classroom usage in advance
+
+Now one photo not only gives you an instant headcount, but also provides scientific, data-driven attendance insights and future occupancy predictions!
+
+
