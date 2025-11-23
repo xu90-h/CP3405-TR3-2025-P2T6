@@ -43,11 +43,12 @@ A 7-day classroom occupancy forecast generated using **Long Short-Term Memory (L
 
 **Technical Highlights**  
 - Model: LSTM (Long Short-Term Memory) recurrent neural network  
-- Input: Past 4 weeks of per-day student count data  
+- Input: Past weeks of per-day student count data  
 - Output: Predicted occupancy rate (%) for the next 7 days  
 - Automatically retrains every day with new detection results  
 - Helps teachers and administrators plan classroom usage in advance
 
 Now one photo not only gives you an instant headcount, but also provides scientific, data-driven attendance insights and future occupancy predictions!
+
 
 
