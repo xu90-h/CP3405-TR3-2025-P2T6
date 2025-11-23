@@ -5,7 +5,7 @@ A fast, accurate, and easy-to-deploy web tool that automatically detects and cou
 Upload any classroom image → instantly get red bounding boxes around each student + total headcount.  
 Perfect for quick attendance, classroom monitoring, teaching evaluation, or research.
 
-![demo](images/app.jpg)  
+![demo](app.png)  
 *Upload → Detection in < 1 second*
 
 ## Features
@@ -24,4 +24,5 @@ Perfect for quick attendance, classroom monitoring, teaching evaluation, or rese
 
 | Original Photo                           | Detection Result (4 students detected)         |
 |------------------------------------------|------------------------------------------------|
-| ![original](images/start.jpg)         | ![detected](images/end.jpg)               |
+| ![original](start.png)         | ![detected](end.png)               |
+
